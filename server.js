@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+const env = require('./env');
 
 const app = express();
 const port = 8000;
@@ -18,10 +19,15 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 
-    mongoose.connect(`mongodb+srv://vajid:vajid@cluster0-istoc.mongodb.net/test?retryWrites=true&w=majority`, {
+    mongoose.connect(`mongodb+srv://${env.database.user}:${env.database.password}@cluster0-istoc.mongodb.net/test?retryWrites=true&w=majority`, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }, () => {
-        console.log('MongoDB Connected Successfully')
+    }, (error) => {
+        console.log('error', error);
+        if (error) {
+            console.log('Error Connecting Database')
+        } else {
+            console.log('MongoDB Connected Successfully')
+        }
     })
 })
